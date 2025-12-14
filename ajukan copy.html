@@ -476,6 +476,7 @@
     <div class="blur-circle blur-1"></div>
     <div class="blur-circle blur-2"></div>
     <div class="blur-circle blur-3"></div>
+    <div class="blur-circle blur-4"></div>
 
     <!-- Header -->
     <header>
@@ -507,62 +508,24 @@
     <!-- Main Content -->
     <div class="container">
         <div class="form-container">
-            <h1>Form Ajukan Proyektor</h1>
-
-            <!-- Tab Switcher -->
-            <div class="tab-switcher">
-                <button class="tab-btn active" onclick="switchTab('peminjaman')">peminjaman</button>
-                <button class="tab-btn" onclick="switchTab('booking')">booking</button>
-            </div>
+            <h1>Form Pengembalian Proyektor</h1>
+            <p class="subtitle">Kembalikan proyektor sesuai ketentuan waktu</p>
 
             <!-- Form -->
-            <form id="proyektorForm" onsubmit="handleSubmit(event)">
-                <div class="form-row">
-                    <div class="form-group">
-                        <input type="text" id="namaLengkap" placeholder="Nama Lengkap*" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" id="namaDosen" placeholder="Nama Dosen*" required>
-                    </div>
+            <form id="pengembalianForm" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <input type="time" id="jamSelesai" required>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <input type="text" id="nim" placeholder="NIM*" required pattern="[0-9]+" title="NIM hanya boleh berisi angka">
-                    </div>
-                    <div class="form-group">
-                        <input type="text" id="jamKuliah" placeholder="Jam Kuliah* (contoh: 08:00-10:00)" required>
-                    </div>
-                </div>
+                <button type="button" class="camera-btn" onclick="openCamera()">Nyalakan Kamera</button>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <input type="text" id="kelas" placeholder="Kelas*" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="tel" id="whatsapp" placeholder="No WhatsApp*" required pattern="[0-9]+" title="Nomor WhatsApp hanya boleh berisi angka">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <select id="proyektor" required>
-                            <option value="" disabled selected>Pilih Proyektor yang tersedia</option>
-                            <option value="Proyektor 1">Proyektor 1 - Lab A</option>
-                            <option value="Proyektor 2">Proyektor 2 - Lab B</option>
-                            <option value="Proyektor 3">Proyektor 3 - Lab C</option>
-                            <option value="Proyektor 4">Proyektor 4 - Lab D</option>
-                            <option value="Proyektor 5">Proyektor 5 - Ruang Meeting</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <button type="button" class="camera-btn" onclick="openCamera()">Nyalakan Kamera</button>
-                    </div>
-                </div>
+                <div id="photoStatus"></div>
 
                 <input type="hidden" id="capturedPhoto" value="">
 
-                <button type="submit" class="submit-btn">Simpan Peminjaman</button>
+                <button type="button" class="cancel-btn" onclick="handleCancel()">Batal</button>
+
+                <button type="submit" class="submit-btn" id="submitBtn" disabled>Simpan Pengembalian</button>
             </form>
         </div>
     </div>
@@ -570,7 +533,7 @@
     <!-- Camera Modal -->
     <div id="cameraModal" class="modal">
         <div class="modal-content">
-            <h2>Ambil Foto Bukti Peminjaman</h2>
+            <h2>Ambil Foto Bukti Pengembalian</h2>
             <video id="video" autoplay></video>
             <canvas id="canvas"></canvas>
             <img id="capturedImage" style="display: none;">
@@ -582,21 +545,34 @@
     </div>
 
     <script>
-        let stream = null;
-        let currentTab = 'peminjaman';
-
-        function switchTab(tab) {
-            currentTab = tab;
-            const buttons = document.querySelectorAll('.tab-btn');
-            buttons.forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
+        // Dark Mode Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             
-            if (tab === 'booking') {
-                alert('Mode Booking: Anda dapat memesan proyektor untuk jadwal yang akan datang.');
-            }
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update icon
+            document.getElementById('theme-icon').textContent = newTheme === 'dark' ? '☀️' : '🌙';
         }
+
+        // Load saved theme
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.getElementById('theme-icon').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+        })();
+
+        let stream = null;
+
+        // Set default time to current time
+        const timeInput = document.getElementById('jamSelesai');
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        timeInput.value = `${hours}:${minutes}`;
 
         async function openCamera() {
             const modal = document.getElementById('cameraModal');
@@ -627,6 +603,8 @@
             const canvas = document.getElementById('canvas');
             const capturedImage = document.getElementById('capturedImage');
             const capturedPhotoInput = document.getElementById('capturedPhoto');
+            const submitBtn = document.getElementById('submitBtn');
+            const photoStatus = document.getElementById('photoStatus');
             
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
@@ -640,6 +618,13 @@
             capturedImage.src = imageData;
             capturedImage.style.display = 'block';
             video.style.display = 'none';
+            
+            // Enable submit button
+            submitBtn.disabled = false;
+            
+            // Show success message
+            photoStatus.className = 'photo-status success';
+            photoStatus.textContent = '✓ Foto berhasil diambil! Anda dapat menutup modal dan melanjutkan.';
             
             alert('Foto berhasil diambil! Silakan tutup modal untuk melanjutkan.');
         }
@@ -657,47 +642,61 @@
             modal.classList.remove('active');
         }
 
+        function handleCancel() {
+            if (confirm('Apakah Anda yakin ingin membatalkan pengembalian proyektor?')) {
+                // Reset form
+                document.getElementById('pengembalianForm').reset();
+                document.getElementById('capturedPhoto').value = '';
+                document.getElementById('submitBtn').disabled = true;
+                document.getElementById('photoStatus').textContent = '';
+                document.getElementById('capturedImage').style.display = 'none';
+                
+                // Redirect to dashboard
+                alert('Pengembalian dibatalkan.');
+                window.location.href = 'dashboard-peminjaman.html';
+            }
+        }
+
         function handleSubmit(event) {
             event.preventDefault();
             
-            const namaLengkap = document.getElementById('namaLengkap').value;
-            const nim = document.getElementById('nim').value;
-            const kelas = document.getElementById('kelas').value;
-            const namaDosen = document.getElementById('namaDosen').value;
-            const jamKuliah = document.getElementById('jamKuliah').value;
-            const whatsapp = document.getElementById('whatsapp').value;
-            const proyektor = document.getElementById('proyektor').value;
+            const jamSelesai = document.getElementById('jamSelesai').value;
             const capturedPhoto = document.getElementById('capturedPhoto').value;
-
-            // Validasi NIM
-            if (!/^\d+$/.test(nim)) {
-                alert('NIM hanya boleh berisi angka!');
-                return;
-            }
-
-            // Validasi WhatsApp
-            if (!/^\d+$/.test(whatsapp)) {
-                alert('Nomor WhatsApp hanya boleh berisi angka!');
-                return;
-            }
 
             // Validasi foto
             if (!capturedPhoto) {
-                alert('Mohon ambil foto bukti peminjaman terlebih dahulu!');
+                alert('Mohon ambil foto bukti pengembalian terlebih dahulu!');
+                return;
+            }
+
+            // Validasi jam
+            if (!jamSelesai) {
+                alert('Mohon isi jam selesai pengembalian!');
                 return;
             }
 
             // Jika semua validasi lolos
-            const message = `Peminjaman Berhasil Disimpan!\n\nMode: ${currentTab}\nNama: ${namaLengkap}\nNIM: ${nim}\nKelas: ${kelas}\nDosen: ${namaDosen}\nJam: ${jamKuliah}\nWhatsApp: ${whatsapp}\nProyektor: ${proyektor}\nFoto: Tersimpan`;
+            const message = `Pengembalian Berhasil Disimpan!\n\nJam Selesai: ${jamSelesai}\nFoto Bukti: Tersimpan\n\nNotifikasi akan dikirim ke WhatsApp Anda.\nTerima kasih telah mengembalikan proyektor tepat waktu!`;
             
             alert(message);
             
             // Reset form
-            document.getElementById('proyektorForm').reset();
+            document.getElementById('pengembalianForm').reset();
             document.getElementById('capturedPhoto').value = '';
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('photoStatus').textContent = '';
             document.getElementById('capturedImage').style.display = 'none';
             
-            // Di sini Anda bisa menambahkan logika untuk mengirim data ke server
+            // Set default time again
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            timeInput.value = `${hours}:${minutes}`;
+            
+            // Redirect to dashboard after 2 seconds
+            setTimeout(() => {
+                window.location.href = 'dashboard-peminjaman.html';
+            }, 2000);
         }
 
         // Close modal when clicking outside
@@ -708,7 +707,6 @@
             }
         }
     </script>
-    <script src="theme.js"></script>
 <!-- Code injected by live-server -->
 <script>
 	// <![CDATA[  <-- For SVG support
