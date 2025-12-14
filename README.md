@@ -55,6 +55,10 @@ Sistem Peminjaman Proyektor adalah aplikasi web yang dirancang untuk memudahkan 
 - **Form Pengembalian**: Pengembalian proyektor dengan verifikasi foto
 
 ### 🔍 Fitur Lainnya
+- **Dark Mode**: Toggle tema gelap/terang dengan penyimpanan preferensi (localStorage)
+  - Keyboard shortcut: `Ctrl + Shift + D`
+  - Animasi smooth transition
+  - Persistent theme preference
 - **Search & Filter**: Pencarian berdasarkan nama, NIM, kelas, dosen, proyektor, dan tanggal
 - **Export Data**: Export ke PDF dan Excel
 - **Camera Integration**: Pengambilan foto bukti menggunakan webcam
@@ -92,11 +96,13 @@ Sistem Peminjaman Proyektor adalah aplikasi web yang dirancang untuk memudahkan 
 figma-an/
 ├── 📄 login.html                 # Halaman login
 ├── 📄 registrasi.html            # Halaman registrasi
-├── 📄 index.html             # Landing page
+├── 📄 index.html                 # Landing page
 ├── 📄 dashboard-peminjaman.html  # Dashboard admin
 ├── 📄 ajukan.html                # Form peminjaman proyektor
 ├── 📄 booking.html               # Form booking proyektor
 ├── 📄 pengembalian.html          # Form pengembalian proyektor
+├── 🎨 theme.css                  # Global dark mode styling
+├── 📜 theme.js                   # Dark mode toggle logic
 ├── 🖼️ logo.svg                   # Logo aplikasi
 └── 📖 README.md                  # Dokumentasi
 ```

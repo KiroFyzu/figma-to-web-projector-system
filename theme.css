@@ -1,0 +1,199 @@
+/* Dark Mode Theme - Global Styles */
+/* Import ini di semua halaman HTML dengan: <link rel="stylesheet" href="theme.css"> */
+
+:root {
+    /* Light Mode Colors */
+    --bg-primary: #f5f5f5;
+    --bg-secondary: #ffffff;
+    --bg-card: rgba(255, 255, 255, 0.5);
+    --text-primary: #000000;
+    --text-secondary: #191970;
+    --text-tertiary: #727272;
+    --text-muted: #B1B1B1;
+    --border-color: #C4C7D0;
+    --shadow: rgba(0, 0, 0, 0.25);
+    --shadow-light: rgba(0, 0, 0, 0.1);
+    --glass-bg: linear-gradient(226deg, rgba(255, 255, 255, 0.8) 0%, rgba(216, 224, 241, 0.8) 50%, rgba(188, 210, 255, 0.8) 100%);
+    
+    /* Colors yang tetap */
+    --primary-blue: #6495ED;
+    --navy: #7272d4;
+    --light-blue: #64BDED;
+    --purple: #C395EB;
+    --dark-navy: #2E3E66;
+}
+
+[data-theme="dark"] {
+    /* Dark Mode Colors */
+    --bg-primary: #0a0e27;
+    --bg-secondary: #1a1f3a;
+    --bg-card: rgba(26, 31, 58, 0.5);
+    --text-primary: #ffffff;
+    --text-secondary: #8bb3ff;
+    --text-tertiary: #a0a0a0;
+    --text-muted: #6a6a6a;
+    --border-color: #3a4055;
+    --shadow: rgba(255, 255, 255, 0.1);
+    --shadow-light: rgba(255, 255, 255, 0.05);
+    --glass-bg: linear-gradient(226deg, rgba(26, 31, 58, 0.9) 0%, rgba(42, 54, 84, 0.9) 50%, rgba(58, 70, 104, 0.9) 100%);
+}
+
+/* Smooth transitions untuk semua elemen */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Dark Mode Toggle Button */
+.theme-toggle {
+    width: 50px;
+    height: 50px;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 24px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px var(--shadow);
+    position: relative;
+    overflow: hidden;
+    z-index: 100;
+}
+
+/* Responsive positioning untuk theme toggle di header */
+@media (max-width: 1024px) {
+    header .theme-toggle {
+        position: fixed !important;
+        top: 20px !important;
+        right: 20px !important;
+        transform: none !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .theme-toggle {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+    }
+    
+    header .theme-toggle,
+    .header-container .theme-toggle {
+        position: fixed !important;
+        top: 15px !important;
+        right: 15px !important;
+        transform: none !important;
+    }
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1) rotate(15deg);
+    box-shadow: 0 4px 15px var(--shadow);
+}
+
+.theme-toggle:active {
+    transform: scale(0.95);
+}
+
+/* Animation untuk icon */
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.theme-toggle.rotating {
+    animation: rotate 0.5s ease;
+}
+
+/* Dark mode khusus untuk blur circles */
+[data-theme="dark"] .blur-circle {
+    opacity: 0.3 !important;
+}
+
+[data-theme="dark"] .blur-1 {
+    background: #4169E1;
+}
+
+[data-theme="dark"] .blur-2 {
+    background: #000080;
+}
+
+[data-theme="dark"] .blur-3 {
+    background: #1E90FF;
+}
+
+[data-theme="dark"] .blur-4 {
+    background: #9370DB;
+}
+
+/* Dark mode untuk form inputs */
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+    color: var(--text-muted);
+}
+
+[data-theme="dark"] input:focus,
+[data-theme="dark"] select:focus,
+[data-theme="dark"] textarea:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 10px rgba(100, 149, 237, 0.5);
+}
+
+/* Dark mode untuk badges dan status */
+[data-theme="dark"] .status-badge {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .status-badge.borrowed {
+    background: #3a3a00;
+    color: #ffff88;
+}
+
+[data-theme="dark"] .status-badge.returned {
+    background: #002a4d;
+    color: #88ccff;
+}
+
+/* Dark mode untuk tables */
+[data-theme="dark"] table {
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] thead th {
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    border-bottom: 2px solid var(--border-color);
+}
+
+[data-theme="dark"] tbody tr {
+    border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] tbody tr:hover {
+    background: rgba(100, 149, 237, 0.1);
+}
+
+/* Dark mode untuk navigation cards */
+[data-theme="dark"] .nav-card {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .nav-card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+}
