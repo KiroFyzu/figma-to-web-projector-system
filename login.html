@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistem Peminjaman Proyektor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f5f5f5;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Background dengan efek blur */
+        .background {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .bg-card {
+            position: absolute;
+            width: 1440px;
+            height: 618px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            box-shadow: 0px 0px 35px rgba(0, 0, 0, 0.25);
+            border-radius: 15px;
+        }
+
+        .blur-circle {
+            position: absolute;
+            border-radius: 9999px;
+            filter: blur(75px);
+        }
+
+        .blur-circle-1 {
+            width: 450px;
+            height: 461px;
+            right: 10%;
+            top: 10%;
+            opacity: 0.5;
+            background: #6495ED;
+            box-shadow: 150px 150px 150px;
+        }
+
+        .blur-circle-2 {
+            width: 400px;
+            height: 410px;
+            left: 15%;
+            top: 40%;
+            opacity: 0.3;
+            background: #191970;
+            box-shadow: 150px 150px 150px;
+        }
+
+        .blur-circle-3 {
+            width: 310px;
+            height: 318px;
+            right: 15%;
+            bottom: 10%;
+            opacity: 0.5;
+            background: #64BDED;
+            box-shadow: 150px 150px 150px;
+        }
+
+        .blur-circle-4 {
+            width: 310px;
+            height: 318px;
+            left: 5%;
+            top: 15%;
+            opacity: 0.5;
+            background: #C395EB;
+            box-shadow: 150px 150px 150px;
+        }
+
+        /* Container login */
+        .login-container {
+            position: relative;
+            width: 392px;
+            background: linear-gradient(226deg, rgba(255, 255, 255, 0.8) 0%, rgba(216, 224, 241, 0.8) 50%, rgba(188, 210, 255, 0.8) 100%);
+            box-shadow: 0px 0px 20px #191970;
+            border-radius: 20px;
+            backdrop-filter: blur(50px);
+            padding: 40px;
+            z-index: 10;
+        }
+
+        .login-container h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: black;
+            margin-bottom: 10px;
+        }
+
+        .login-container .subtitle {
+            font-size: 13px;
+            font-weight: 400;
+            color: black;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 10px;
+            font-weight: 600;
+            color: black;
+            margin-bottom: 5px;
+            margin-left: 4px;
+        }
+
+        .form-group input {
+            width: 100%;
+            height: 40px;
+            background: white;
+            border: 1px solid #C4C7D0;
+            border-radius: 20px;
+            padding: 0 20px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #6495ED;
+            box-shadow: 0 0 10px rgba(100, 149, 237, 0.3);
+        }
+
+        .login-btn {
+            width: 100%;
+            height: 40px;
+            background: black;
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .footer-links {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .footer-links p {
+            font-size: 13px;
+            color: #727272;
+            margin-bottom: 5px;
+        }
+
+        .footer-links a {
+            font-size: 13px;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 0.7;
+        }
+
+        .register-link {
+            color: #6495ED;
+            font-weight: 500;
+        }
+
+        .home-link {
+            color: #C395EB;
+            font-weight: 400;
+            display: block;
+            margin-top: 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .login-container {
+                width: 90%;
+                max-width: 392px;
+                padding: 30px 25px;
+            }
+
+            .bg-card {
+                width: 100%;
+                height: 100%;
+            }
+
+            .blur-circle {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background dengan efek blur -->
+    <div class="background">
+        <div class="bg-card"></div>
+        <div class="blur-circle blur-circle-1"></div>
+        <div class="blur-circle blur-circle-2"></div>
+        <div class="blur-circle blur-circle-3"></div>
+        <div class="blur-circle blur-circle-4"></div>
+    </div>
+
+    <!-- Form Login -->
+    <div class="login-container">
+        <h1>Login</h1>
+        <p class="subtitle">Sistem Peminjaman Proyektor</p>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Masukkan username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Masukkan password" required>
+            </div>
+
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+
+        <div class="footer-links">
+            <p>Belum punya akun? <a href="registrasi.html" class="register-link">Daftar di sini</a></p>
+            <a href="index.html" class="home-link">Kembali ke Halaman Utama</a>
+        </div>
+    </div>
+
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Validasi sederhana
+            if (username && password) {
+                alert('Login berhasil!\nUsername: ' + username);
+                // Redirect ke dashboard peminjaman
+                window.location.href = 'dashboard-peminjaman.html';
+            } else {
+                alert('Mohon isi username dan password!');
+            }
+        }
+    </script>
+</body>
+</html>

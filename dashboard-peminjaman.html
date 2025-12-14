@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Peminjaman - Sistem Peminjaman Proyektor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            background: #f5f5f5;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Background blur effects */
+        .blur-circle {
+            position: fixed;
+            border-radius: 9999px;
+            filter: blur(75px);
+            z-index: 0;
+        }
+
+        .blur-1 {
+            width: 450px;
+            height: 461px;
+            top: 10%;
+            right: 10%;
+            background: #6495ED;
+            opacity: 0.5;
+        }
+
+        .blur-2 {
+            width: 400px;
+            height: 410px;
+            top: 40%;
+            left: 10%;
+            background: #191970;
+            opacity: 0.3;
+        }
+
+        .blur-3 {
+            width: 310px;
+            height: 318px;
+            bottom: 10%;
+            right: 15%;
+            background: #64BDED;
+            opacity: 0.5;
+        }
+
+        .blur-4 {
+            width: 310px;
+            height: 318px;
+            top: 15%;
+            left: 5%;
+            background: #C395EB;
+            opacity: 0.5;
+        }
+
+        .blur-5 {
+            width: 400px;
+            height: 400px;
+            bottom: 5%;
+            right: 5%;
+            background: #C395EB;
+            opacity: 0.3;
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            z-index: 10;
+            margin-bottom: 30px;
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+            object-fit: cover;
+        }
+
+        .logo-text h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #191970;
+        }
+
+        /* Navigation Cards */
+        .nav-cards {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-card {
+            width: 155px;
+            height: 60px;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-card.dashboard { 
+            background: #576899;
+            box-shadow: 0px 0px 20px #191970;
+        }
+        .nav-card.ajukan { 
+            background: #A9B3CC; 
+        }
+        .nav-card.kembalikan { 
+            background: #808CB8; 
+        }
+
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 8px;
+            width: 80%;
+            height: 6px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.25);
+        }
+
+        .nav-card-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            width: 100%;
+            text-align: center;
+            padding: 0 10px;
+        }
+
+        /* Main Content */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            color: black;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 24px;
+            font-weight: 400;
+            color: black;
+        }
+
+        /* Statistics Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+            border-radius: 20px;
+            backdrop-filter: blur(50px);
+            padding: 20px;
+            position: relative;
+        }
+
+        .stat-card.highlight {
+            background: #E0EAFF;
+        }
+
+        .stat-card h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #191970;
+            margin-bottom: 15px;
+        }
+
+        .stat-card .value {
+            font-size: 40px;
+            font-weight: 700;
+            color: black;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .label {
+            font-size: 15px;
+            font-weight: 500;
+            color: #727272;
+        }
+
+        /* Activity Section */
+        .activity-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .activity-box {
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 0px 0px 20px #191970;
+            border-radius: 30px;
+            backdrop-filter: blur(50px);
+            padding: 25px;
+        }
+
+        .activity-box h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #191970;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .activity-box h2::before {
+            content: '📋';
+            font-size: 28px;
+        }
+
+        .activity-item {
+            background: #EBEBEB;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .activity-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 15px;
+            height: 100%;
+            background: #E0EAFF;
+            box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.25);
+            border-radius: 10px 0 0 10px;
+        }
+
+        .activity-item h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #191970;
+            margin-bottom: 5px;
+        }
+
+        .activity-item p {
+            font-size: 12px;
+            font-weight: 500;
+            color: #727272;
+            margin-bottom: 3px;
+        }
+
+        .activity-item .time {
+            font-size: 10px;
+            color: #B1B1B1;
+        }
+
+        .activity-item .status {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #BCD2FF;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+            border-radius: 5px;
+            padding: 3px 15px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #191970;
+        }
+
+        /* Projector Status */
+        .projector-item {
+            background: #EBEBEB;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .projector-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .projector-info h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #191970;
+            margin-bottom: 3px;
+        }
+
+        .projector-info p {
+            font-size: 12px;
+            font-weight: 500;
+            color: #727272;
+        }
+
+        /* Search and Filter Section */
+        .search-section {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 300px;
+            height: 49px;
+            background: white;
+            border: 2px solid #C4C7D0;
+            border-radius: 20px;
+            padding: 0 20px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: #B1B1B1;
+        }
+
+        .search-btn {
+            width: 94px;
+            height: 49px;
+            background: #2E3E66;
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background: #1a2640;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-select, .filter-date {
+            height: 35px;
+            background: white;
+            border: 2px solid #C4C7D0;
+            border-radius: 20px;
+            padding: 0 15px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            outline: none;
+            min-width: 200px;
+        }
+
+        .reset-btn {
+            height: 35px;
+            background: #727272;
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            padding: 0 30px;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .reset-btn:hover {
+            background: #5a5a5a;
+        }
+
+        .export-btn {
+            height: 35px;
+            border: none;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            padding: 0 20px;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s ease;
+            margin-left: auto;
+        }
+
+        .export-btn.pdf {
+            background: #FFA4A5;
+            color: black;
+        }
+
+        .export-btn.excel {
+            background: #A4FFA7;
+            color: black;
+        }
+
+        .export-btn:hover {
+            opacity: 0.8;
+        }
+
+        /* Data Table */
+        .table-container {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 20px;
+            padding: 20px;
+            overflow-x: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            text-align: center;
+            color: #191970;
+            font-size: 15px;
+            font-weight: 700;
+            padding: 15px 10px;
+            border-bottom: 2px solid #C4C7D0;
+        }
+
+        tbody td {
+            text-align: center;
+            color: black;
+            font-size: 12px;
+            font-weight: 400;
+            padding: 15px 10px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        tbody tr:hover {
+            background: rgba(100, 149, 237, 0.1);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 3px 15px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 500;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+        }
+
+        .status-badge.borrowed {
+            background: #F0FFAE;
+            color: #191970;
+        }
+
+        .status-badge.returned {
+            background: #BCD2FF;
+            color: #191970;
+        }
+
+        .status-badge.available {
+            background: #BCD2FF;
+            color: #191970;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            width: 25px;
+            height: 20px;
+            border-radius: 3px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .action-btn.view {
+            background: #A9B3CC;
+        }
+
+        .action-btn.edit {
+            background: #C395EB;
+        }
+
+        .action-btn.status {
+            background: #F0FFAE;
+        }
+
+        .action-btn.delete {
+            background: #FF6C6F;
+        }
+
+        .action-btn.approve {
+            background: #8EE791;
+        }
+
+        .checkbox {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+            border: 2px solid #B1B1B1;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .activity-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .search-input {
+                min-width: 100%;
+            }
+
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-select, .filter-date {
+                min-width: 100%;
+            }
+
+            .export-btn {
+                margin-left: 0;
+            }
+
+            .table-container {
+                font-size: 10px;
+            }
+
+            .blur-circle {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Blur Effects -->
+    <div class="blur-circle blur-1"></div>
+    <div class="blur-circle blur-2"></div>
+    <div class="blur-circle blur-3"></div>
+    <div class="blur-circle blur-4"></div>
+    <div class="blur-circle blur-5"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <img src="logo.svg" alt="Logo" class="logo-img">
+                <div class="logo-text">
+                    <a style="text-decoration: none;" href="index.html"><h2>Sistem Peminjaman<br>Proyektor</h2></a> 
+                </div>
+            </div>
+            <div class="nav-cards">
+                <a href="dashboard-peminjaman.html" class="nav-card dashboard">
+                    <div class="nav-card-text">Dashboard</div>
+                </a>
+                <a href="ajukan.html" class="nav-card ajukan">
+                    <div class="nav-card-text">Ajukan Proyektor</div>
+                </a>
+                <a href="pengembalian.html" class="nav-card kembalikan">
+                    <div class="nav-card-text">Kembalikan Proyektor</div>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1>Dashboard Peminjaman</h1>
+            <p>Kelola dan pantau semua peminjaman proyektor</p>
+        </div>
+
+        <!-- Statistics Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Peminjaman</h3>
+                <div class="value">2</div>
+                <div class="label">semua waktu</div>
+            </div>
+            <div class="stat-card">
+                <h3>Sedang Dipinjam</h3>
+                <div class="value">1</div>
+                <div class="label">aktif sekarang</div>
+            </div>
+            <div class="stat-card">
+                <h3>Sudah Dikembalikan</h3>
+                <div class="value">1</div>
+                <div class="label">selesai</div>
+            </div>
+            <div class="stat-card">
+                <h3>Hari Ini</h3>
+                <div class="value">1</div>
+                <div class="label">15 Des 2025</div>
+            </div>
+            <div class="stat-card highlight">
+                <h3>Proyektor Terpopuler</h3>
+                <div class="value" style="font-size: 32px;">Epson</div>
+                <div class="label">3x dipinjam</div>
+            </div>
+            <div class="stat-card highlight">
+                <h3>Minggu Ini</h3>
+                <div class="value">2</div>
+                <div class="label">peminjaman baru</div>
+            </div>
+            <div class="stat-card highlight">
+                <h3>Bulan Ini</h3>
+                <div class="value">2</div>
+                <div class="label">Desember</div>
+            </div>
+        </div>
+
+        <!-- Activity Section -->
+        <div class="activity-section">
+            <!-- Recent Activity -->
+            <div class="activity-box">
+                <h2>Aktivitas Terbaru</h2>
+                <div class="activity-item">
+                    <h4>Huang Renjun</h4>
+                    <p>Epson EB-001 · D</p>
+                    <p class="time">23 Nov, 06.55</p>
+                    <span class="status">Kembali</span>
+                </div>
+                <div class="activity-item">
+                    <h4>Hwang Yeji</h4>
+                    <p>Epson EB-X41 · D</p>
+                    <p class="time">13 Nov, 11.30</p>
+                    <span class="status">Kembali</span>
+                </div>
+            </div>
+
+            <!-- Projector Status -->
+            <div class="activity-box">
+                <h2>Status Proyektor</h2>
+                <div class="projector-item">
+                    <div class="projector-icon">📽️</div>
+                    <div class="projector-info">
+                        <h4>EPS.001 - Epson EB.001</h4>
+                        <p>2x total peminjaman</p>
+                    </div>
+                    <span class="status-badge available" style="margin-left: auto;">Tersedia</span>
+                </div>
+                <div class="projector-item">
+                    <div class="projector-icon">📽️</div>
+                    <div class="projector-info">
+                        <h4>EPS41.001 - Epson EB-S41</h4>
+                        <p>3x total peminjaman</p>
+                    </div>
+                    <span class="status-badge available" style="margin-left: auto;">Tersedia</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter Section -->
+        <div class="search-section">
+            <div class="search-bar">
+                <input type="text" class="search-input" id="searchInput" placeholder="Cari nama, NIM, kelas, dosen, atau proyektor...">
+                <button class="search-btn" onclick="searchData()">🔍 Cari</button>
+            </div>
+            <div class="filter-row">
+                <select class="filter-select" id="projectorFilter" onchange="filterData()">
+                    <option value="">Semua Proyektor</option>
+                    <option value="SNY DG-191">SNY DG-191</option>
+                    <option value="EPS EB-001">EPS EB-001</option>
+                    <option value="EPS EB-S41">EPS EB-S41</option>
+                    <option value="EPS EB-X41">EPS EB-X41</option>
+                </select>
+                <input type="date" class="filter-date" id="dateFilter" onchange="filterData()">
+                <button class="reset-btn" onclick="resetFilters()">🔄 Reset</button>
+                <button class="export-btn pdf" onclick="exportPDF()">📄 Export PDF</button>
+                <button class="export-btn excel" onclick="exportExcel()">📊 Export Excel</button>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" class="checkbox" onclick="selectAll(this)"></th>
+                        <th>Nama</th>
+                        <th>NIM</th>
+                        <th>Kelas</th>
+                        <th>Dosen</th>
+                        <th>Jam Kuliah</th>
+                        <th>Proyektor</th>
+                        <th>Waktu</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="dataTable">
+                    <tr>
+                        <td><input type="checkbox" class="checkbox"></td>
+                        <td>Fyas</td>
+                        <td>60200124071</td>
+                        <td>D</td>
+                        <td>Pak. Syafar</td>
+                        <td>-</td>
+                        <td>SNY DG-191</td>
+                        <td><strong>Pinjam:</strong> 8/11/2025<br><strong>Kembali:</strong> 14:38</td>
+                        <td><span class="status-badge borrowed">Dipinjam</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn view" title="Lihat Detail">👁️</button>
+                                <button class="action-btn edit" title="Edit">✏️</button>
+                                <button class="action-btn status" title="Ubah Status">🔄</button>
+                                <button class="action-btn delete" title="Hapus">🗑️</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" class="checkbox"></td>
+                        <td>Dwiyanti</td>
+                        <td>60200124004</td>
+                        <td>D</td>
+                        <td>Kiro, PhD</td>
+                        <td>-</td>
+                        <td>EPS EB-001</td>
+                        <td><strong>Pinjam:</strong> 6/11/2025<br><strong>Kembali:</strong> 11:58</td>
+                        <td><span class="status-badge returned">Dikembalikan</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn view" title="Lihat Detail">👁️</button>
+                                <button class="action-btn edit" title="Edit">✏️</button>
+                                <button class="action-btn approve" title="Approve">✅</button>
+                                <button class="action-btn delete" title="Hapus">🗑️</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Search functionality
+        function searchData() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const table = document.getElementById('dataTable');
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const text = row.textContent.toLowerCase();
+                
+                if (text.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        }
+
+        // Filter functionality
+        function filterData() {
+            const projectorFilter = document.getElementById('projectorFilter').value.toLowerCase();
+            const dateFilter = document.getElementById('dateFilter').value;
+            const table = document.getElementById('dataTable');
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const cells = row.getElementsByTagName('td');
+                
+                if (cells.length === 0) continue;
+                
+                const projektorCell = cells[6].textContent.toLowerCase();
+                const waktuCell = cells[7].textContent;
+                
+                let showRow = true;
+                
+                // Filter by projector
+                if (projectorFilter && !projektorCell.includes(projectorFilter)) {
+                    showRow = false;
+                }
+                
+                // Filter by date
+                if (dateFilter && !waktuCell.includes(dateFilter)) {
+                    showRow = false;
+                }
+                
+                row.style.display = showRow ? '' : 'none';
+            }
+        }
+
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('projectorFilter').value = '';
+            document.getElementById('dateFilter').value = '';
+            
+            const table = document.getElementById('dataTable');
+            const rows = table.getElementsByTagName('tr');
+            
+            for (let i = 0; i < rows.length; i++) {
+                rows[i].style.display = '';
+            }
+        }
+
+        // Select all checkboxes
+        function selectAll(checkbox) {
+            const checkboxes = document.querySelectorAll('#dataTable .checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = checkbox.checked;
+            });
+        }
+
+        // Export to PDF
+        function exportPDF() {
+            alert('Export ke PDF akan segera tersedia!\n\nData yang akan diekspor:\n- Total Peminjaman: 2 data\n- Filter aktif: ' + (document.getElementById('projectorFilter').value || 'Semua'));
+        }
+
+        // Export to Excel
+        function exportExcel() {
+            alert('Export ke Excel akan segera tersedia!\n\nData yang akan diekspor:\n- Total Peminjaman: 2 data\n- Filter aktif: ' + (document.getElementById('projectorFilter').value || 'Semua'));
+        }
+
+        // Allow Enter key to search
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchData();
+            }
+        });
+    </script>
+</body>
+</html>
